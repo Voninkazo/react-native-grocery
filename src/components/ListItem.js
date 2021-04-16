@@ -1,5 +1,6 @@
 import React from 'react';
-import {View , Text, StyleSheet, Image, TouchableOpacity, Platform} from 'react-native';
+import {View , Text, StyleSheet, Image, TouchableOpacity,Animated, Platform} from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const styles = StyleSheet.create({
     container: {
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-        color: '#69696969'
+        color: '#69696969',
     },
     icon: {
         height: 30,
@@ -31,12 +32,56 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: 'rgba(0,0,0,0.2)',
     },
+
+    leftAction: {
+        flex: 1,
+        backgroundColor: '#388e3c',
+        justifyContent: 'center',
+    },
+
+    rightAction: {
+        flex: 1,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+    },
+
+    actionText: {
+        color: '#fff',
+        fontWeight: '600',
+        padding: 20
+    }
    
 });
 
 export const Separator = () => <View style={styles.separator} />
 
-const ListItem = ({name, onFavoritePress, isFavorite}) => {
+const LeftActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+        inputRange: [0, 100],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+      })
+      return (
+        <View style={styles.leftAction}>
+            <Animated.Text style={[styles.actionText, {transform: [{scale}] }]}>Add to Cart</Animated.Text>
+        </View>
+      )
+}
+
+const RightActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+        inputRange: [-100, 0],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+      })
+      return (
+        <View style={styles.rightAction}>
+            <Animated.Text style={[styles.actionText, {transform: [{scale}] }]}>Delete</Animated.Text>
+        </View>
+      )
+}
+
+const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwipe}) => {
     let starIcon;
 
     if(isFavorite) {
@@ -61,6 +106,11 @@ const ListItem = ({name, onFavoritePress, isFavorite}) => {
     //  }
 
     return (
+    <Swipeable
+        renderLeftActions={onAddedSwipe && LeftActions}
+        onSwipeableLeftOpen={onAddedSwipe}
+        renderRightActions={onDeleteSwipe && RightActions}
+    >
        <View style={styles.container}>
           <Text style={styles.text}>{name}</Text>
           {
@@ -74,6 +124,7 @@ const ListItem = ({name, onFavoritePress, isFavorite}) => {
           </TouchableOpacity>
 }
         </View>
+    </Swipeable>
     )
 }
 
