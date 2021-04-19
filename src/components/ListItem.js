@@ -81,7 +81,7 @@ const RightActions = (progress, dragX) => {
       )
 }
 
-const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwipe}) => {
+const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwipe, onRowPress}) => {
     let starIcon;
 
     if(isFavorite) {
@@ -111,6 +111,7 @@ const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwip
         onSwipeableLeftOpen={onAddedSwipe}
         renderRightActions={onDeleteSwipe && RightActions}
     >
+        <TouchableOpacity onPress={onRowPress}>
        <View style={styles.container}>
           <Text style={styles.text}>{name}</Text>
           {
@@ -124,6 +125,7 @@ const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwip
           </TouchableOpacity>
 }
         </View>
+        </TouchableOpacity>
     </Swipeable>
     )
 }
