@@ -8,7 +8,11 @@ const updateStorageCurrentList = (list) => {
 }
 
 const updateStorageCurrentCart = (list) => {
-    AsyncStorage.setItem('@@GroceryList/currentList', JSON.stringify(list))
+    AsyncStorage.setItem('@@GroceryList/currenCart', JSON.stringify(list))
+}
+
+const updateStorageFavoriteList = (favorited) => {
+    AsyncStorage.setItem('@@GroceryList/favorited', JSON.stringify(favorited))
 }
 
 export const useCurrentList = () => {
@@ -17,8 +21,9 @@ export const useCurrentList = () => {
     const [cart, setCart] = useState([]);
     const [favorited, setFavorited] = useState([]);
 
+
     const addItem = (text) => {
-        const newList = [{ id: uuid(), name: text }, ...list];
+        const newList = [{ id: uuid(), name: text, isFavorite: false }, ...list];
         setList(newList);
         updateStorageCurrentList(newList);
     }
@@ -35,14 +40,18 @@ export const useCurrentList = () => {
         updateStorageCurrentList(newList);
     }
 
-    const addToFavorite = (id) => {
-        const favoritedItems = []
+    const addToFavorite = (item) => {
+        //  removeItem(item.id)
+        const favoritedItems = [...favorited, { item, isFavorite: true }]
+        setFavorited(favoritedItems);
+        updateStorageFavoriteList(favoritedItems)
     }
 
     useEffect(() => {
         Promise.all([
                 AsyncStorage.getItem('@@GroceryList/currentList'),
                 AsyncStorage.getItem('@@GroceryList/currentCart'),
+                AsyncStorage.getItem('@@GroceryList/favorited'),
             ])
             .then(([list, cartItems]) => [JSON.parse(list), JSON.parse(cartItems)])
             .then(([list, cartItems]) => {
@@ -51,6 +60,10 @@ export const useCurrentList = () => {
                 }
                 if (cartItems) {
                     setCart(cartItems)
+                }
+
+                if (favorited) {
+                    setFavorited(favorited)
                 }
                 setLoading(false);
             })
@@ -65,5 +78,6 @@ export const useCurrentList = () => {
         addToCart,
         favorited,
         addToFavorite,
+        isFavorite
     }
 }

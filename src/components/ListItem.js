@@ -1,6 +1,7 @@
 import React from 'react';
 import {View , Text, StyleSheet, Image, TouchableOpacity,Animated, Platform} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { useCurrentList } from '../util/ListManager';
 
 const styles = StyleSheet.create({
     container: {

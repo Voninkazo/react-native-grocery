@@ -7,7 +7,7 @@ import AddItem from '../components/AddItem';
 import {useCurrentList} from '../util/ListManager';
 
 export default ({navigation}) => {
-    const {list,loading, addItem, removeItem,cart, addToCart} = useCurrentList();
+    const {list,loading, addItem, removeItem,cart, addToCart, addToFavorite} = useCurrentList();
 
     if (loading) {
         return (
@@ -37,7 +37,7 @@ export default ({navigation}) => {
                 renderItem={({item, index}) => (
                     <ListItem 
                         name={item.name}
-                        onFavoritePress={() => alert('todo: handle favorite')}
+                        onFavoritePress={() => addToFavorite(item)}
                         isFavorite={index < 2}
                         onAddedSwipe={() => addToCart(item)}
                         onDeleteSwipe={() => removeItem(item.id)}
