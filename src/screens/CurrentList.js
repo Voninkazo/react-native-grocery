@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, FlatList, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import React from 'react';
+import { View, Text, SafeAreaView, KeyboardAvoidingView, SectionList } from 'react-native'
 
 //import nachos from '../data/nachos'
-import ListItem, { Separator } from '../components/ListItem';
+import ListItem, { SectionHeader, Separator } from '../components/ListItem';
 import AddItem from '../components/AddItem';
 import {useCurrentList} from '../util/ListManager';
 
 export default ({navigation}) => {
-    const {list,loading, addItem, removeItem} = useCurrentList();
+    const {list,loading, addItem, removeItem,cart, addToCart} = useCurrentList();
 
     if (loading) {
         return (
@@ -16,6 +16,7 @@ export default ({navigation}) => {
             </SafeAreaView>
         )
     }
+    console.log(addToCart)
 
     return (
         <SafeAreaView  style={{flex: 1}}>
@@ -23,14 +24,22 @@ export default ({navigation}) => {
              style={{flex: 1}}
              behavior='padding'
             >
-            <FlatList
-                data = {list}
+            <SectionList
+                sections={[
+                    {title:'List', data: list},
+                    {title: 'Cart', data: cart},
+                ]}
+
+                renderSectionHeader = {({section}) => {
+                    <SectionHeader title={section.title} />
+                }}
+
                 renderItem={({item, index}) => (
                     <ListItem 
                         name={item.name}
                         onFavoritePress={() => alert('todo: handle favorite')}
                         isFavorite={index < 2}
-                        onAddedSwipe={() => removeItem(item.id)}
+                        onAddedSwipe={() => addToCart(item)}
                         onDeleteSwipe={() => removeItem(item.id)}
                         onRowPress={() => {
                             navigation.navigate('ItemDetails', {

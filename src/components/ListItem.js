@@ -43,12 +43,20 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'red',
         justifyContent: 'center',
+        alignItems: 'flex-end',
     },
 
     actionText: {
         color: '#fff',
         fontWeight: '600',
         padding: 20
+    },
+    sectionContainer: {
+        backgroundColor: '#3d3d3d',
+        paddingVertical: 10,
+    },
+    sectionText:{
+        fontWeight: '600'
     }
    
 });
@@ -79,6 +87,12 @@ const RightActions = (progress, dragX) => {
             <Animated.Text style={[styles.actionText, {transform: [{scale}] }]}>Delete</Animated.Text>
         </View>
       )
+}
+
+export const SectionHeader = ({title}) => {
+    <View style={[styles.container, styles.sectionContainer]}>
+        <Text style={styles.sectionText}>{title}</Text>
+    </View>
 }
 
 const ListItem = ({name, onFavoritePress, isFavorite, onAddedSwipe, onDeleteSwipe, onRowPress}) => {
